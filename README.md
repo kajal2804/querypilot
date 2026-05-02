@@ -46,6 +46,7 @@ User Question (POST /ask)
          ▼
   JSON Response + Web UI
 ```
+<img width="1112" height="706" alt="image" src="https://github.com/user-attachments/assets/05a48c51-1e39-4eb8-8dc0-e519967c00e5" />
 
 ---
 
