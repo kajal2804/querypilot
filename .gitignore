@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.env
+venv/
+.venv/
+*.sqlite
+*.db
+.pytest_cache/
+.mypy_cache/
+dist/
+*.egg-info/
+.chromadb/
+*.pdf
+

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QueryPilot — Multi-Agent SQL Assistant</title>
+  <link rel="stylesheet" href="/static/styles.css"/>
+</head>
+<body>
+
+<header>
+  <div class="logo">🤖</div>
+  <h1>QueryPilot</h1>
+  <span class="badge">Groq · FastAPI · PostgreSQL</span>
+</header>
+
+<!-- Tab bar -->
+<div class="tab-bar">
+  <button class="tab active" onclick="switchTab('ask')">💬 Ask</button>
+  <button class="tab" onclick="switchTab('docs')">📄 Documents</button>
+  <button class="tab" onclick="switchTab('tests')">🧪 Tests</button>
+</div>
+
+<main>
+
+  <!-- ══════════════════ ASK TAB ══════════════════ -->
+  <div id="tab-ask">
+
+    <div class="query-card">
+      <label>Ask a question about your data</label>
+      <div class="input-row">
+        <input id="question" type="text"
+          placeholder="e.g. What were total sales last year?"
+          autocomplete="off"/>
+        <button id="askBtn" onclick="askQuestion()">Ask →</button>
+      </div>
+      <div class="examples">
+        <span class="chip" onclick="setQ(this)">Total revenue by product category</span>
+        <span class="chip" onclick="setQ(this)">Top 5 customers by total spending</span>
+        <span class="chip" onclick="setQ(this)">How many sales were made in 2024?</span>
+        <span class="chip" onclick="setQ(this)">Average salary per department</span>
+        <span class="chip" onclick="setQ(this)">Which employees made the most sales?</span>
+        <span class="chip" onclick="setQ(this)">List all active projects and their budgets</span>
+        <span class="chip" onclick="setQ(this)">Sales in Q1 2023</span>
+      </div>
+    </div>
+
+    <!-- Agent Pipeline -->
+    <div class="pipeline-card">
+      <div class="pipeline-title">Agent Pipeline</div>
+      <div class="pipeline">
+        <div class="agent-node" id="node-schema">
+          <div class="agent-icon">🗂️</div>
+          <div class="agent-label">Schema Agent</div>
+          <div class="agent-sub">Identifies relevant tables</div>
+          <div class="agent-status" id="status-schema"></div>
+        </div>
+        <div class="pipeline-arrow" id="arrow-1">→</div>
+        <div class="agent-node" id="node-sql">
+          <div class="agent-icon">⚙️</div>
+          <div class="agent-label">SQL Generator</div>
+          <div class="agent-sub">NL → SQL via Groq</div>
+          <div class="agent-status" id="status-sql"></div>
+        </div>
+        <div class="pipeline-arrow" id="arrow-2">→</div>
+        <div class="agent-node" id="node-retriever">
+          <div class="agent-icon">📦</div>
+          <div class="agent-label">Retriever Agent</div>
+          <div class="agent-sub">Executes SQL + auto-retry</div>
+          <div class="agent-status" id="status-retriever"></div>
+        </div>
+        <div class="pipeline-arrow" id="arrow-3">→</div>
+        <div class="agent-node" id="node-synth">
+          <div class="agent-icon">💬</div>
+          <div class="agent-label">Synthesizer</div>
+          <div class="agent-sub">Rows → NL answer via Groq</div>
+          <div class="agent-status" id="status-synth"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div id="result">
+      <div id="answerCard" class="answer-card">
+        <div class="tag">Answer</div>
+        <p id="answerText"></p>
+        <div id="retriedBadge" class="retried-badge" style="display:none">
+          ⚠️ SQL failed once — Retriever Agent auto-fixed and retried
+        </div>
+        <div id="cacheBadge" class="cache-badge" style="display:none">
+          ⚡ Groq rate-limited — answered from vector cache (similar past query)
+        </div>
+      </div>
+      <!-- Chart -->
+      <div id="chartCard" class="chart-card" style="display:none">
+        <div class="chart-header">
+          <span id="chartTitle" class="chart-title"></span>
+          <div class="chart-type-btns">
+            <button class="chart-btn active" onclick="setChartType('bar',this)">Bar</button>
+            <button class="chart-btn" onclick="setChartType('line',this)">Line</button>
+            <button class="chart-btn" onclick="setChartType('doughnut',this)">Doughnut</button>
+          </div>
+        </div>
+        <div class="chart-wrap"><canvas id="resultChart"></canvas></div>
+      </div>
+
+      <div class="steps">
+        <details>
+          <summary>🗂️ &nbsp;Step 1 — Schema Agent · Relevant Tables<span class="arrow">▶</span></summary>
+          <div class="step-body"><pre><code id="schemaTables"></code></pre></div>
+        </details>
+        <details>
+          <summary>⚙️ &nbsp;Step 2 — SQL Generator Agent · Generated Query<span class="arrow">▶</span></summary>
+          <div class="step-body"><pre><code id="sqlBlock"></code></pre></div>
+        </details>
+        <details>
+          <summary>📦 &nbsp;Step 3 — Retriever Agent · Result Rows<span class="arrow">▶</span></summary>
+          <div class="step-body">
+            <div class="table-wrap"><table id="rowsTable"></table></div>
+            <p class="row-count" id="rowCount"></p>
+          </div>
+        </details>
+      </div>
+
+      <details id="docContextDetails" style="display:none">
+        <summary>📄 &nbsp;Document Context Used<span class="arrow">▶</span></summary>
+        <div class="step-body" id="docContextBody"></div>
+      </details>
+
+    </div>
+
+  </div><!-- /tab-ask -->
+
+
+  <!-- ══════════════════ DOCS TAB ══════════════════ -->
+  <div id="tab-docs" style="display:none">
+
+    <div class="test-header-card">
+      <div>
+        <div class="test-title">📄 Document Knowledge Base</div>
+        <div class="test-subtitle">Upload PDFs or text files — answers will be augmented with relevant excerpts</div>
+      </div>
+      <button id="refreshDocsBtn" onclick="loadDocs()">↻ Refresh</button>
+    </div>
+
+    <!-- Upload area -->
+    <div class="upload-card">
+      <label class="upload-label">Upload a document (.pdf, .txt, .md)</label>
+      <div class="upload-row">
+        <input type="file" id="docFile" accept=".pdf,.txt,.md"/>
+        <button id="uploadBtn" onclick="uploadDoc()">Upload →</button>
+      </div>
+      <div id="uploadStatus" class="upload-status"></div>
+    </div>
+
+    <!-- Ingested docs list -->
+    <div id="docsList" class="docs-list"></div>
+
+  </div>
+
+  <!-- ══════════════════ TESTS TAB ══════════════════ -->
+  <div id="tab-tests" style="display:none">
+
+    <div class="test-header-card">
+      <div>
+        <div class="test-title">API Test Suite</div>
+        <div class="test-subtitle">Runs <code>tests/test_api.py</code> against the live server</div>
+      </div>
+      <button id="runTestsBtn" onclick="runTests()">▶ Run Tests</button>
+    </div>
+
+    <!-- Summary bar -->
+    <div id="testSummary" style="display:none" class="test-summary-bar">
+      <span id="passCount" class="pass-count"></span>
+      <span id="failCount" class="fail-count"></span>
+      <span id="totalCount" class="total-count"></span>
+      <span id="summaryTime" class="summary-time"></span>
+    </div>
+
+    <!-- Test results list -->
+    <div id="testResults" class="test-results"></div>
+
+    <!-- Raw log -->
+    <details id="logDetails" style="display:none" class="log-details">
+      <summary>📋 &nbsp;Raw pytest log<span class="arrow">▶</span></summary>
+      <div class="step-body">
+        <pre id="rawLog" style="max-height:400px;overflow-y:auto"></pre>
+      </div>
+    </details>
+
+  </div><!-- /tab-tests -->
+
+</main>
+
+<footer>QueryPilot — Multi-Agent RAG System · AI Internship Assignment</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>

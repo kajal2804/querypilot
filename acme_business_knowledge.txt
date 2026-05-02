@@ -1,0 +1,198 @@
+ACME Corp — Internal Business Knowledge Base
+Confidential · For internal use only · Updated Q1 2025
+=======================================================
+
+1. COMPANY OVERVIEW
+-------------------
+ACME Corp is a mid-size technology and consumer goods company founded in 2010. The company operates across three main verticals: Electronics, Clothing, and Books. With over 200 registered customers and a sales force of 50 employees, ACME generates revenue primarily through direct B2C and B2B sales channels. Headquarters are located in San Francisco, CA, with regional offices in New York and Chicago.
+
+
+2. PRODUCT CATALOG & PRICING POLICY
+-------------------------------------
+ACME Corp maintains a curated catalog of 20 active products across three categories. Pricing is reviewed quarterly, and discounts greater than 20% require manager approval.
+
+2.1 Electronics
+Electronics is ACME's highest-margin category with an average unit price of $320. Key products include:
+
+- Laptop Pro 15" — $1,200: High-performance laptop for professionals. 16GB RAM, 512GB SSD.
+- Wireless Headphones — $150: Noise-cancelling, 30-hour battery, Bluetooth 5.2.
+- Smart Speaker — $89: Voice-activated, compatible with all major assistants.
+- 4K Monitor 27" — $420: IPS panel, 144Hz refresh rate, USB-C connectivity.
+- Mechanical Keyboard — $110: Tactile switches, RGB backlit, compact TKL layout.
+- Webcam HD 1080p — $75: Built-in microphone, plug-and-play, wide-angle lens.
+
+2.2 Clothing
+Clothing targets casual and active wear segments. Seasonal promotions run in March and September.
+
+- Running Shoes — $85: Lightweight sole, available in sizes 6-13, 8 colorways.
+- Yoga Mat Premium — $45: Non-slip surface, 6mm thickness, includes carry strap.
+- Waterproof Jacket — $130: 3-layer shell, sealed seams, packable design.
+- Sports T-Shirt — $25: Moisture-wicking fabric, 100% recycled polyester.
+- Compression Leggings — $55: 4-way stretch, pockets, UPF 50+ protection.
+
+2.3 Books
+Books is the lowest-margin but highest-volume category. Digital editions available for all titles.
+
+- Python Programming Guide — $40: Beginner to advanced Python, 450 pages, 5th edition.
+- Data Science Handbook — $55: Statistics, ML fundamentals, real-world case studies.
+- Leadership Essentials — $30: Management frameworks, team building, conflict resolution.
+- Marketing Strategy 2024 — $35: Digital marketing, SEO, social media analytics.
+- Financial Modelling — $60: Excel-based models, DCF, scenario analysis.
+- Cloud Architecture Patterns — $50: AWS, Azure, GCP design patterns and best practices.
+
+
+3. SALES POLICIES & GUIDELINES
+--------------------------------
+
+3.1 Discount Authority
+Sales representatives may apply discounts within the following limits:
+- Sales Rep: up to 10% discount, no approval needed.
+- Senior Sales Rep: up to 15% discount, no approval needed.
+- Sales Manager: up to 25% discount, no approval needed.
+- VP of Sales: up to 40% discount; CEO sign-off required for discounts above 35%.
+
+3.2 Return & Refund Policy
+- Electronics: 30-day return window, original packaging required.
+- Clothing: 60-day return window, unworn condition.
+- Books: Non-refundable once opened, exchange only within 14 days.
+- All refunds are processed within 5-7 business days to the original payment method.
+
+3.3 Bulk Order Discounts
+Orders exceeding the following thresholds qualify for automatic bulk pricing:
+- $500 to $999: 5% automatic discount.
+- $1,000 to $2,499: 10% automatic discount.
+- $2,500 to $4,999: 15% automatic discount.
+- $5,000 and above: 20% discount, negotiable with sales manager.
+
+
+4. DEPARTMENT & EMPLOYEE STRUCTURE
+------------------------------------
+ACME Corp has five operational departments: Sales, Engineering, Marketing, HR, and Finance.
+
+- Sales (18 employees): Responsible for all direct revenue generation. Manages B2C and B2B accounts.
+- Engineering (12 employees): Handles product development and internal tooling.
+- Marketing (8 employees): Runs digital campaigns and brand management.
+- HR (6 employees): Manages recruitment, payroll, and performance reviews.
+- Finance (6 employees): Oversees budgeting, reporting, and investor relations.
+
+4.1 Compensation Bands (Annual Salary)
+- Sales: Junior $48,000 | Senior $72,000 | Manager $95,000
+- Engineering: Junior $65,000 | Senior $95,000 | Manager $120,000
+- Marketing: Junior $52,000 | Senior $78,000 | Manager $100,000
+- HR: Junior $45,000 | Senior $65,000 | Manager $85,000
+- Finance: Junior $55,000 | Senior $80,000 | Manager $110,000
+
+
+5. ACTIVE PROJECTS & INITIATIVES
+-----------------------------------
+ACME Corp runs 15 concurrent projects with a combined budget of approximately $2.1 million. Projects are classified as Active, Planning, or Completed.
+
+Project Alpha [Active] — Engineering — Budget: $120,000
+Full redesign of the customer-facing e-commerce platform. Migrating from monolith to microservices architecture on AWS. Expected completion Q3 2025.
+
+Project Beta [Active] — Marketing — Budget: $85,000
+Multi-channel digital marketing campaign targeting the 25-40 age demographic. Includes SEO overhaul, paid social, and influencer partnerships.
+
+Project Gamma [Planning] — Engineering — Budget: $200,000
+Development of a mobile app (iOS + Android) for direct customer purchases and loyalty rewards tracking. Design phase complete.
+
+Project Delta [Active] — Sales — Budget: $95,000
+CRM system upgrade and sales pipeline automation. Integrating Salesforce with internal BI dashboards for real-time revenue tracking.
+
+Project Epsilon [Active] — HR — Budget: $60,000
+Employee onboarding portal revamp. Reducing time-to-productivity for new hires from 3 weeks to 10 days through structured digital training modules.
+
+Project Zeta [Completed] — Finance — Budget: $45,000
+Automated financial reporting system. Replaced manual Excel reporting with live Power BI dashboards. Delivered on time and under budget.
+
+Project Eta [Active] — Engineering — Budget: $150,000
+AI-powered product recommendation engine. Using collaborative filtering and real-time purchase data to personalise the homepage for each customer.
+
+Project Theta [Planning] — Marketing — Budget: $75,000
+Launch of ACME loyalty programme with tiered rewards (Bronze/Silver/Gold). Integration with POS, e-commerce, and mobile app planned for Q4 2025.
+
+Project Iota [Active] — Sales — Budget: $55,000
+Expansion into the Pacific Northwest region. Hiring 3 new sales reps and running targeted local ad campaigns in Seattle and Portland.
+
+Project Kappa [Active] — Engineering — Budget: $90,000
+Data warehouse migration to Snowflake. Consolidating 7 legacy data sources into a single source of truth for analytics teams.
+
+
+6. CUSTOMER SEGMENTS & GEOGRAPHIC DISTRIBUTION
+-------------------------------------------------
+ACME Corp serves customers across the United States. The customer base of 200 registered accounts is distributed across major metropolitan areas. New York, California, and Texas account for over 45% of total revenue. Customer acquisition cost (CAC) averages $38, and the average lifetime value (LTV) is approximately $1,200.
+
+Top customer cities by volume:
+- New York, NY: 28 customers, average order value $340
+- Los Angeles, CA: 22 customers, average order value $290
+- Houston, TX: 18 customers, average order value $310
+- Chicago, IL: 16 customers, average order value $275
+- Phoenix, AZ: 14 customers, average order value $260
+- Philadelphia, PA: 12 customers, average order value $285
+- San Antonio, TX: 11 customers, average order value $250
+- San Diego, CA: 10 customers, average order value $305
+
+
+7. KEY BUSINESS METRICS & KPIs (FY 2024)
+------------------------------------------
+- Total Revenue: $2,840,000 (up 18% from FY 2023)
+- Total Orders: 500 (up 22% from FY 2023)
+- Average Order Value: $284 (down 3% from FY 2023)
+- Customer Retention Rate: 67% (up 4 percentage points)
+- New Customers Acquired: 48 (up 11%)
+- Top Product Category by Revenue: Electronics
+- Best Sales Month: November
+- Worst Sales Month: February
+- Employee Headcount: 50 (added 5 from FY 2023)
+- Active Projects: 10 (up from 7 in FY 2023)
+- Net Promoter Score (NPS): 42
+- Gross Margin: 38%
+
+
+8. COMPANY POLICIES
+---------------------
+
+8.1 Remote Work Policy
+ACME Corp operates on a hybrid model. Employees are expected to be in-office a minimum of 3 days per week (Tuesday, Wednesday, Thursday). Fully remote work may be approved by department heads for up to 4 weeks per year.
+
+8.2 Expense Reimbursement
+- Meals and entertainment: Up to $75 per person per event, receipts required.
+- Travel: Economy class for domestic, business class for flights over 6 hours.
+- Home office equipment: Up to $500 one-time allowance for new hires.
+
+8.3 Performance Reviews
+Annual reviews take place in December. Mid-year check-ins occur in June. Employees rated "Exceeds Expectations" are eligible for a merit increase of 5-10%. Promotions are budgeted annually and finalized in January.
+
+8.4 Training & Development
+Each employee receives an annual learning budget of $1,500 for courses, conferences, and certifications. Engineering team members receive an additional $500 for technical certifications (AWS, GCP, Azure, etc.).
+
+
+9. FREQUENTLY ASKED QUESTIONS
+--------------------------------
+
+Q: Who are the top-performing employees?
+A: Top performers are recognised quarterly. The Sales department typically contributes the most sales transactions. Employees who exceed their quota by 20% or more receive a performance bonus of 8% of their base salary.
+
+Q: What is the best-selling product?
+A: The Laptop Pro 15" is consistently the highest-revenue product. Wireless Headphones and 4K Monitor are the second and third highest-revenue items respectively.
+
+Q: What was revenue in Q1 2023?
+A: Q1 2023 (January through March 2023) total revenue was approximately $580,000, representing 20% of the annual total for that year.
+
+Q: Which department has the highest average salary?
+A: Engineering has the highest average salary at approximately $93,000 across all levels. Finance is second at approximately $82,000.
+
+Q: What is the company's return policy for electronics?
+A: Electronics can be returned within 30 days of purchase in original packaging for a full refund. After 30 days, only warranty service is available. Refunds are processed in 5-7 business days.
+
+Q: Are there any active projects in the HR department?
+A: Yes, Project Epsilon is an active HR initiative focused on revamping the employee onboarding portal. It has a budget of $60,000 and aims to reduce new-hire time-to-productivity from 3 weeks to 10 days.
+
+Q: What is the company's biggest market?
+A: New York is ACME Corp's largest single market by customer count (28 customers) and by average order value ($340). The combined New York and California markets account for approximately 25% of total revenue.
+
+
+---
+This document is maintained by the ACME Corp Business Intelligence team.
+Contact: bi-team@acmecorp.internal
+Last reviewed: January 2025
