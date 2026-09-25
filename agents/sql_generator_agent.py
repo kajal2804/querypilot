@@ -3,9 +3,10 @@ agents/sql_generator_agent.py — Agent 2: SQL Generator Agent
 --------------------------------------------------------------
 Responsibilities:
   - Convert natural language question → valid PostgreSQL SELECT query
-  - Handle temporal references (last year, Q1 2023, this month…)
+  - Handle temporal references
   - Validate generated SQL for safety
   - Graceful fallback when question is out of scope
+  - Robust handling of malformed/empty model responses
 """
 
 import re
@@ -72,7 +73,24 @@ class SQLGeneratorAgent:
                 max_tokens=512,
             )
 
+            # Handle malformed or empty model responses
+            if (
+                not getattr(resp, "choices", None)
+                or not getattr(resp.choices[0], "message", None)
+                or not getattr(resp.choices[0].message, "content", None)
+            ):
+                return {
+                    "sql": None,
+                    "error": "SQL generation returned an empty response."
+                }
+
             raw = resp.choices[0].message.content.strip()
+
+            if not raw:
+                return {
+                    "sql": None,
+                    "error": "SQL generation returned an empty response."
+                }
 
             # Remove accidental markdown code fences
             raw = re.sub(
@@ -80,6 +98,12 @@ class SQLGeneratorAgent:
                 "",
                 raw
             ).replace("```", "").strip()
+
+            if not raw:
+                return {
+                    "sql": None,
+                    "error": "SQL generation returned an empty response."
+                }
 
             # Handle unsupported questions
             if raw.upper().startswith("UNSUPPORTED_QUERY"):
@@ -156,7 +180,24 @@ class SQLGeneratorAgent:
                 max_tokens=512,
             )
 
+            # Handle malformed or empty model responses
+            if (
+                not getattr(resp, "choices", None)
+                or not getattr(resp.choices[0], "message", None)
+                or not getattr(resp.choices[0].message, "content", None)
+            ):
+                return {
+                    "sql": None,
+                    "error": "SQL fix returned an empty response."
+                }
+
             raw = resp.choices[0].message.content.strip()
+
+            if not raw:
+                return {
+                    "sql": None,
+                    "error": "SQL fix returned an empty response."
+                }
 
             # Remove accidental markdown code fences
             raw = re.sub(
@@ -164,6 +205,12 @@ class SQLGeneratorAgent:
                 "",
                 raw
             ).replace("```", "").strip()
+
+            if not raw:
+                return {
+                    "sql": None,
+                    "error": "SQL fix returned an empty response."
+                }
 
             # Validate corrected SQL before retrying it
             is_valid, validation_error = validate_sql(raw)
