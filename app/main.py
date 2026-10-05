@@ -153,7 +153,7 @@ async def ask(req: AskRequest):
 
     try:
 
-        schema = await schema_agent.get_schema()
+schema = await schema_agent.format_for_prompt(question)
 
     except Exception as exc:
 
