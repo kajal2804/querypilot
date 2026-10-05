@@ -66,6 +66,8 @@ def test_sql_generation_evaluation(case):
     assert result["error"] is None
     assert result["sql"] is not None
 
+    assert result["sql"] == case["generated_sql"]
+
     is_valid, error = validate_sql(result["sql"])
     assert is_valid, error
 
