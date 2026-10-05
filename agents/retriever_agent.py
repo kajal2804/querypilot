@@ -2,20 +2,26 @@
 agents/retriever_agent.py — Agent 3: Retriever Agent
 ------------------------------------------------------
 Responsibilities:
+  - Validate generated SQL before database execution
   - Execute the generated SQL against PostgreSQL via asyncpg
-  - On failure: send error back to SQL Generator and retry once
+  - On database failure: send error back to SQL Generator and retry once
+  - Prevent unsafe SQL from reaching the database
   - Return paginated database results
-  - Return pagination metadata
+  - Return pagination metadata (plus column names)
 """
 
 import asyncpg
+
 from database.connection import get_pool
+from agents.sql_validator import validate_sql
 
 
+# Kept for backward compatibility with any module that imports it.
+# Row limiting is now handled by pagination (see MAX_PAGE_SIZE).
 MAX_ROWS = 200
 MAX_PAGE_SIZE = 200
 DEFAULT_PAGE_SIZE = 50
-MAX_RETRIES = 1
+MAX_RETRIES = 1   # one self-healing retry
 
 
 class RetrieverAgent:
@@ -29,7 +35,11 @@ class RetrieverAgent:
         page_size: int = DEFAULT_PAGE_SIZE,
     ) -> dict:
         """
-        Execute a SELECT query and return a paginated result.
+        Run a SELECT query and return a paginated result.
+
+        If the query fails and sql_agent is provided,
+        ask the SQL Generator to fix the SQL and retry once.
+        Queries rejected by the SQL safety validator are NOT auto-fixed.
 
         Pagination:
             page=1, page_size=50 -> rows 1-50
@@ -94,10 +104,17 @@ class RetrieverAgent:
 
         # -------------------------------------------------
         # Self-healing retry
+        #
+        # Do not attempt AI auto-fix if the query failed
+        # because it was rejected by the SQL safety validator.
         # -------------------------------------------------
 
-        if result["error"] and sql_agent and question:
-
+        if (
+            result["error"]
+            and result.get("validation_error") is not True
+            and sql_agent
+            and question
+        ):
             fixed = sql_agent.fix(
                 question,
                 sql,
@@ -129,7 +146,7 @@ class RetrieverAgent:
         return result
 
     # -----------------------------------------------------
-    # Execute SQL
+    # Validate and execute SQL
     # -----------------------------------------------------
 
     async def _run(
@@ -138,6 +155,35 @@ class RetrieverAgent:
         page: int = 1,
         page_size: int = DEFAULT_PAGE_SIZE,
     ) -> dict:
+        """
+        Validate and execute SQL against PostgreSQL,
+        returning one page of results.
+        """
+
+        # ---------------------------------------------------------
+        # SQL SAFETY VALIDATION
+        # ---------------------------------------------------------
+        #
+        # This is a second safety layer immediately before the
+        # query reaches PostgreSQL.
+        #
+        is_valid, validation_error = validate_sql(sql)
+
+        if not is_valid:
+            return {
+                **_empty(
+                    f"SQL validation failed: {validation_error}",
+                    page=page,
+                    page_size=page_size,
+                ),
+                "sql_used": sql,
+                "retried": False,
+                "validation_error": True,
+            }
+
+        # ---------------------------------------------------------
+        # DATABASE EXECUTION
+        # ---------------------------------------------------------
 
         try:
 
@@ -159,6 +205,7 @@ class RetrieverAgent:
                     ),
                     "sql_used": sql,
                     "retried": False,
+                    "validation_error": False,
                 }
 
             # -------------------------------------------------
@@ -201,24 +248,16 @@ class RetrieverAgent:
 
             return {
                 "columns": columns,
-
                 "rows": rows,
-
                 "row_count": len(rows),
-
                 "total_rows": total_rows,
-
                 "page": page,
-
                 "page_size": page_size,
-
                 "has_next": has_next,
-
                 "sql_used": sql,
-
                 "retried": False,
-
                 "error": None,
+                "validation_error": False,
             }
 
         except asyncpg.PostgresError as exc:
@@ -231,6 +270,7 @@ class RetrieverAgent:
                 ),
                 "sql_used": sql,
                 "retried": False,
+                "validation_error": False,
             }
 
         except Exception as exc:
@@ -243,6 +283,7 @@ class RetrieverAgent:
                 ),
                 "sql_used": sql,
                 "retried": False,
+                "validation_error": False,
             }
 
     # -----------------------------------------------------
@@ -251,6 +292,9 @@ class RetrieverAgent:
 
     @staticmethod
     def rows_to_text(columns: list, rows: list) -> str:
+        """
+        Convert query results into readable text.
+        """
 
         if not columns:
             return "No results."
@@ -265,7 +309,7 @@ class RetrieverAgent:
         for row in rows[:50]:
 
             lines.append(
-                " | ".join(str(v) for v in row)
+                " | ".join(str(value) for value in row)
             )
 
         if len(rows) > 50:
@@ -286,22 +330,18 @@ def _empty(
     page: int = 1,
     page_size: int = DEFAULT_PAGE_SIZE,
 ) -> dict:
+    """
+    Return a standard empty result structure.
+    """
 
     return {
         "columns": [],
-
         "rows": [],
-
         "row_count": 0,
-
         "total_rows": 0,
-
         "page": page,
-
         "page_size": page_size,
-
         "has_next": False,
-
         "error": error,
     }
 
@@ -311,6 +351,9 @@ def _empty(
 # ---------------------------------------------------------
 
 def _serialize(rows: list[list]) -> list[list]:
+    """
+    Convert PostgreSQL values into JSON-friendly values.
+    """
 
     import decimal
     import datetime
@@ -324,20 +367,15 @@ def _serialize(rows: list[list]) -> list[list]:
         for value in row:
 
             if isinstance(value, decimal.Decimal):
-
                 new_row.append(float(value))
 
             elif isinstance(
                 value,
                 (datetime.date, datetime.datetime)
             ):
-
-                new_row.append(
-                    value.isoformat()
-                )
+                new_row.append(value.isoformat())
 
             else:
-
                 new_row.append(value)
 
         out.append(new_row)

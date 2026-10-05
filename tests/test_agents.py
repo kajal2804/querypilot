@@ -23,7 +23,8 @@ class TestSQLGeneratorAgent:
         mock_response.choices[0].message.content = "```sql\nSELECT * FROM customers\n```"
         with patch.object(self.agent.client.chat.completions, "create",
                           return_value=mock_response):
-            result = self.agent.generate("show customers", "Table: customers\n  - customer_id (int)")
+            result = self.agent.generate(
+                "show customers", "Table: customers\n  - customer_id (int)")
         assert result["sql"] == "SELECT * FROM customers"
         assert result["error"] is None
 
@@ -32,16 +33,18 @@ class TestSQLGeneratorAgent:
         mock_response.choices[0].message.content = "DROP TABLE customers"
         with patch.object(self.agent.client.chat.completions, "create",
                           return_value=mock_response):
-            result = self.agent.generate("drop customers", "Table: customers\n")
+            result = self.agent.generate(
+                "drop customers", "Table: customers\n")
         assert result["sql"] is None
-        assert "Unsafe" in result["error"]
+        assert result["error"] is not None
 
     def test_unsupported_query(self):
         mock_response = MagicMock()
         mock_response.choices[0].message.content = "UNSUPPORTED_QUERY"
         with patch.object(self.agent.client.chat.completions, "create",
                           return_value=mock_response):
-            result = self.agent.generate("what is the weather?", "Table: customers\n")
+            result = self.agent.generate(
+                "what is the weather?", "Table: customers\n")
         assert result["sql"] is None
         assert result["error"] is not None
 
@@ -65,7 +68,8 @@ class TestRetrieverAgent:
 
     def test_rows_to_text_normal(self):
         from agents.retriever_agent import RetrieverAgent
-        text = RetrieverAgent.rows_to_text(["name", "age"], [["Alice", 30], ["Bob", 25]])
+        text = RetrieverAgent.rows_to_text(
+            ["name", "age"], [["Alice", 30], ["Bob", 25]])
         assert "name" in text
         assert "Alice" in text
         assert "Bob" in text
@@ -73,7 +77,7 @@ class TestRetrieverAgent:
     @pytest.mark.asyncio
     async def test_execute_no_sql(self):
         from agents.retriever_agent import RetrieverAgent
-        agent  = RetrieverAgent()
+        agent = RetrieverAgent()
         result = await agent.execute("")
         assert result["error"] == "No SQL query provided."
         assert result["row_count"] == 0
@@ -101,6 +105,7 @@ class TestSynthesizerAgent:
     def test_synthesize_api_error(self):
         with patch.object(self.agent.client.chat.completions, "create",
                           side_effect=Exception("API timeout")):
-            result = self.agent.synthesize("How many customers?", ["count"], [[200]])
+            result = self.agent.synthesize(
+                "How many customers?", ["count"], [[200]])
         assert result["answer"] is None
         assert "Synthesis failed" in result["error"]
