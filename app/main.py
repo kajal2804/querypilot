@@ -153,7 +153,7 @@ async def ask(req: AskRequest):
 
     try:
 
-schema = await schema_agent.format_for_prompt(question)
+        schema = await schema_agent.format_for_prompt(question)
 
     except Exception as exc:
 
@@ -303,45 +303,30 @@ schema = await schema_agent.format_for_prompt(question)
 
     try:
 
-        answer = await synthesizer_agent.synthesize(
+        synth = synthesizer_agent.synthesize(
             question=question,
             columns=columns,
             rows=rows,
-            doc_context=doc_context
+            doc_hits=doc_context
         )
 
     except Exception as exc:
 
         return AskResponse(
-
             question=question,
-
             answer=None,
-
             sql_query=sql_used,
-
             columns=columns,
-
             rows=rows,
-
             row_count=row_count,
-
             total_rows=total_rows,
-
             page=page,
-
             page_size=page_size,
-
             has_next=has_next,
-
             relevant_tables=relevant_tables,
-
             retried=retried,
-
             from_cache=False,
-
             doc_context=doc_context,
-
             error=f"Answer synthesis failed: {exc}"
         )
 
@@ -350,34 +335,19 @@ schema = await schema_agent.format_for_prompt(question)
     # -----------------------------------------------------
 
     return AskResponse(
-
         question=question,
-
-        answer=answer,
-
+        answer=synth.get("answer"),
         sql_query=sql_used,
-
         columns=columns,
-
         rows=rows,
-
         row_count=row_count,
-
         total_rows=total_rows,
-
         page=page,
-
         page_size=page_size,
-
         has_next=has_next,
-
         relevant_tables=relevant_tables,
-
         retried=retried,
-
         from_cache=False,
-
         doc_context=doc_context,
-
-        error=None
+        error=synth.get("error")
     )
